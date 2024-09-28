@@ -7,7 +7,7 @@ local lspconfig = require "lspconfig"
 local servers = {
   "yamlls",
   "lemminx",
-  "tsserver",
+  "ts_ls",
   "gopls",
   "rust_analyzer",
   "svelte",
