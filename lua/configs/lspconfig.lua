@@ -16,6 +16,7 @@ local servers = {
   "svelte",
   "dockerls",
   "terraformls",
+  "nixd",
 }
 
 -- lsps with default config
