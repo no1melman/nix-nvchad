@@ -47,12 +47,8 @@ if osName == "Linux" then
       ["*"] = "wl-copy --foreground --type text/plain --primary",
     },
     paste = {
-      ["+"] = function()
-        return systemlist('wl-paste --no-newline | sed -e "s/\r$//"', 1)
-      end,
-      ["*"] = function()
-        return systemlist('wl-paste --no-newline --primary | sed -e "s/\r$//"', 1)
-      end,
+      ["+"] = "wl-paste --no-newline",
+      ["*"] = "wl-paste --no-newline --primary",
     },
     cache_enabled = true,
   }
