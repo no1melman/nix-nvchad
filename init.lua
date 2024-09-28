@@ -41,10 +41,19 @@ end)
 local osName = vim.loop.os_uname().sysname
 if osName == "Linux" then
   vim.g.clipboard = {
-    name = 'wl clipboard',
-    copy = { ["+"] = { "wl-copy" }, ["*"] = { "wl-copy" } },
-    paste = { ["+"] = { "wl-paste -n" }, ["*"] = { "wl-paste -n" } },
-    cache_enabled = true
+    name = "wl clipboard",
+    copy = {
+      ["+"] = "wl-copy --foreground --type text/plain",
+      ["*"] = "wl-copy --foreground --type text/plain --primary",
+    },
+    paste = {
+      ["+"] = function()
+        return systemlist('wl-paste --no-newline | sed -e "s/\r$//"', 1)
+      end,
+      ["*"] = function()
+        return systemlist('wl-paste --no-newline --primary | sed -e "s/\r$//"', 1)
+      end,
+    },
+    cache_enabled = true,
   }
 end
-
