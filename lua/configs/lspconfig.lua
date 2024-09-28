@@ -13,7 +13,6 @@ local servers = {
   "svelte",
   "html",
   "cssls",
-  "svelte",
   "dockerls",
   "terraformls",
   "nixd",

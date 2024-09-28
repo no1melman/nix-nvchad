@@ -43,7 +43,8 @@ if osName == "Linux" then
   vim.g.clipboard = {
     name = 'wl clipboard',
     copy = { ["+"] = { "wl-copy" }, ["*"] = { "wl-copy" } },
-    paste = { ["+"] = { "wl-paste" }, ["*"] = { "wl-paste" } },
+    paste = { ["+"] = { "wl-paste -n" }, ["*"] = { "wl-paste -n" } },
     cache_enabled = true
   }
 end
+
