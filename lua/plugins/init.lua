@@ -1,5 +1,47 @@
 return {
   {
+    "nvim-treesitter/nvim-treesitter",
+    opts = {
+      ensure_installed = {
+        "javascript",
+        "typescript",
+        "tsx",
+        "svelte",
+
+        "json",
+        "yaml",
+        "dockerfile",
+        "terraform",
+        "markdown",
+        "mermaid",
+        "proto",
+        "cmake",
+        "regex",
+        "toml",
+
+        "bash",
+        "bicep",
+        "c_sharp",
+        "cpp",
+        "c",
+        "go",
+        "rust",
+        "python",
+        "gdscript",
+        "haskell",
+        -- "ocaml",
+        "sql",
+        "nix",
+
+        "git_config",
+        "git_rebase",
+        "gitcommit",
+        "gitignore",
+      },
+    },
+  },
+
+  {
     "stevearc/conform.nvim",
     -- event = 'BufWritePre', -- uncomment for format on save
     config = function()
@@ -90,44 +132,4 @@ return {
     "Hoffs/omnisharp-extended-lsp.nvim",
   },
 
-  {
-    "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
-        "javascript",
-        "typescript",
-        "tsx",
-        "svelte",
-
-        "json",
-        "yaml",
-        "dockerfile",
-        "terraform",
-        "markdown",
-        "mermaid",
-        "proto",
-        "cmake",
-        "regex",
-        "toml",
-
-        "bash",
-        "bicep",
-        "c_sharp",
-        "cpp",
-        "c",
-        "go",
-        "rust",
-        "python",
-        "gdscript",
-        "haskell",
-        -- "ocaml",
-        "sql",
-
-        "git_config",
-        "git_rebase",
-        "gitcommit",
-        "gitignore",
-      },
-    },
-  },
 }
