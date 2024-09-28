@@ -16,6 +16,7 @@ local servers = {
   "dockerls",
   "terraformls",
   "nixd",
+  "pyright",
 }
 
 -- lsps with default config
