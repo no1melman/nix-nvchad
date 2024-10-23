@@ -21,7 +21,7 @@ local options = {
       end
     end,
 
-    nix = { "nix fmt" },
+    nix = { "nixfmt" },
   },
 
   format_on_save = {
