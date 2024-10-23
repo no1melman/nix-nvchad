@@ -20,6 +20,8 @@ local options = {
         return { "isort", "black" }
       end
     end,
+
+    nix = { "nix fmt" },
   },
 
   format_on_save = {
