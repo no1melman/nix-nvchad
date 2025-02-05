@@ -110,7 +110,11 @@ lspconfig.omnisharp.setup {
   },
 }
 
-if not (osName == "Linux") then
+if osName == "Linux" then
+  lspconfig.clangd.setup {
+    cmd = { "clangd" },
+  }
+else
   lspconfig.clangd.setup {
     cmd = { "clangd", "--query-driver=C:/ProgramData/chocolatey/lib/winlibs/tools/mingw64/bin/g++.exe" },
   }
