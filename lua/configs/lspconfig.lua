@@ -50,7 +50,6 @@ local osName = vim.loop.os_uname().sysname
 
 if osName == "Linux" then
   local bicepDllLocation = os.getenv("BICEP_DLL_LOCATION")
-  print(bicepDllLocation)
   lspconfig.bicep.setup {
     on_init = on_init,
     on_attach = on_attach,
@@ -77,7 +76,6 @@ require("ionide").setup {
 
 if osName == "Linux" then
   local powershellEs = os.getenv("POWERSHELL_ES")
-  print(powershellEs)
   lspconfig.powershell_es.setup {
     on_init = on_init,
     on_attach = on_attach,
