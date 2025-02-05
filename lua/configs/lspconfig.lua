@@ -46,12 +46,25 @@ lspconfig.gopls.setup {
   },
 }
 
-lspconfig.bicep.setup {
-  on_init = on_init,
-  on_attach = on_attach,
-  capabilities = capabilities,
-  cmd = { "dotnet", "C:/tools/bicep/Bicep.LangServer.dll" },
-}
+local osName = vim.loop.os_uname().sysname
+
+if osName == "Linux" then
+  local bicepDllLocation = os.getenv("BICEP_DLL_LOCATION")
+  print(bicepDllLocation)
+  lspconfig.bicep.setup {
+    on_init = on_init,
+    on_attach = on_attach,
+    capabilities = capabilities,
+    cmd = { "dotnet", bicepDllLocation },
+  }
+else
+  lspconfig.bicep.setup {
+    on_init = on_init,
+    on_attach = on_attach,
+    capabilities = capabilities,
+    cmd = { "dotnet", "C:/tools/bicep/Bicep.LangServer.dll" },
+  }
+end
 
 require("ionide").setup {
   on_init = on_init,
@@ -62,12 +75,23 @@ require("ionide").setup {
   capabilities = capabilities,
 }
 
-lspconfig.powershell_es.setup {
-  on_init = on_init,
-  on_attach = on_attach,
-  capabilities = capabilities,
-  bundle_path = vim.fn.stdpath "data" .. "/mason/packages/powershell-editor-services",
-}
+if osName == "Linux" then
+  local powershellEs = os.getenv("POWERSHELL_ES")
+  print(powershellEs)
+  lspconfig.powershell_es.setup {
+    on_init = on_init,
+    on_attach = on_attach,
+    capabilities = capabilities,
+    bundle_path = powershellEs,
+  }
+else
+  lspconfig.powershell_es.setup {
+    on_init = on_init,
+    on_attach = on_attach,
+    capabilities = capabilities,
+    bundle_path = vim.fn.stdpath "data" .. "/mason/packages/powershell-editor-services",
+  }
+end
 
 lspconfig.omnisharp.setup {
   cmd = { "dotnet", vim.fn.stdpath "data" .. "/mason/packages/omnisharp/libexec/OmniSharp.dll" },
@@ -86,6 +110,8 @@ lspconfig.omnisharp.setup {
   },
 }
 
-lspconfig.clangd.setup {
-  cmd = { "clangd", "--query-driver=C:/ProgramData/chocolatey/lib/winlibs/tools/mingw64/bin/g++.exe" },
-}
+if not (osName == "Linux") then
+  lspconfig.clangd.setup {
+    cmd = { "clangd", "--query-driver=C:/ProgramData/chocolatey/lib/winlibs/tools/mingw64/bin/g++.exe" },
+  }
+end
