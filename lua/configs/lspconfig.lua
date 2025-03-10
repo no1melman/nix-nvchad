@@ -17,6 +17,7 @@ local servers = {
   "terraformls",
   "nixd",
   "pyright",
+  "zls",
 }
 
 -- lsps with default config
@@ -49,7 +50,7 @@ lspconfig.gopls.setup {
 local osName = vim.loop.os_uname().sysname
 
 if osName == "Linux" then
-  local bicepDllLocation = os.getenv("BICEP_DLL_LOCATION")
+  local bicepDllLocation = os.getenv "BICEP_DLL_LOCATION"
   lspconfig.bicep.setup {
     on_init = on_init,
     on_attach = on_attach,
@@ -75,7 +76,7 @@ require("ionide").setup {
 }
 
 if osName == "Linux" then
-  local powershellEs = os.getenv("POWERSHELL_ES")
+  local powershellEs = os.getenv "POWERSHELL_ES"
   lspconfig.powershell_es.setup {
     on_init = on_init,
     on_attach = on_attach,
@@ -91,22 +92,43 @@ else
   }
 end
 
-lspconfig.omnisharp.setup {
-  cmd = { "dotnet", vim.fn.stdpath "data" .. "/mason/packages/omnisharp/libexec/OmniSharp.dll" },
-  on_attach = on_attach,
-  capabilities = capabilities,
+if osName == "Linux" then
+  local omnisharp = os.getenv "OMNISHARP_LOCATION"
+  lspconfig.omnisharp.setup {
 
-  enable_roslyn_analyzers = true,
-  enable_import_completion = true,
-  enable_package_restore = true,
-  enable_editorconfig_support = true,
+    cmd = { "dotnet", omnisharp },
+    on_attach = on_attach,
+    capabilities = capabilities,
 
-  analyze_open_documents_only = false,
+    enable_roslyn_analyzers = true,
+    enable_import_completion = true,
+    enable_package_restore = true,
+    enable_editorconfig_support = true,
 
-  handlers = {
-    ["textDocument/definition"] = require("omnisharp_extended").handler,
-  },
-}
+    analyze_open_documents_only = false,
+
+    handlers = {
+      ["textDocument/definition"] = require("omnisharp_extended").handler,
+    },
+  }
+else
+  lspconfig.omnisharp.setup {
+    cmd = { "dotnet", vim.fn.stdpath "data" .. "/mason/packages/omnisharp/libexec/OmniSharp.dll" },
+    on_attach = on_attach,
+    capabilities = capabilities,
+
+    enable_roslyn_analyzers = true,
+    enable_import_completion = true,
+    enable_package_restore = true,
+    enable_editorconfig_support = true,
+
+    analyze_open_documents_only = false,
+
+    handlers = {
+      ["textDocument/definition"] = require("omnisharp_extended").handler,
+    },
+  }
+end
 
 if osName == "Linux" then
   lspconfig.clangd.setup {

@@ -29,6 +29,7 @@ return {
         "python",
         "gdscript",
         "haskell",
+        "zig",
         -- "ocaml",
         "sql",
         "nix",
@@ -131,5 +132,4 @@ return {
   {
     "Hoffs/omnisharp-extended-lsp.nvim",
   },
-
 }
