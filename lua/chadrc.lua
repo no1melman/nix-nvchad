@@ -6,7 +6,9 @@ local M = {}
 
 M.ui = {
   theme = "catppuccin",
+}
 
+M.ui = {
   tabufline = {
     --  more opts
     order = { "buffers", "tabs", "btns" },

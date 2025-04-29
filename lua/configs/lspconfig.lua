@@ -22,14 +22,10 @@ local servers = {
 
 -- lsps with default config
 for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
-    on_attach = on_attach,
-    on_init = on_init,
-    capabilities = capabilities,
-  }
+  vim.lsp.enable(lsp)
 end
 
-lspconfig.gopls.setup {
+vim.lsp.config('gopls', {
   on_attach = on_attach,
   on_init = on_init,
   capabilities = capabilities,
@@ -45,25 +41,25 @@ lspconfig.gopls.setup {
       },
     },
   },
-}
+})
 
 local osName = vim.loop.os_uname().sysname
 
 if osName == "Linux" then
   local bicepDllLocation = os.getenv "BICEP_DLL_LOCATION"
-  lspconfig.bicep.setup {
+  vim.lsp.config('bicep', {
     on_init = on_init,
     on_attach = on_attach,
     capabilities = capabilities,
     cmd = { "dotnet", bicepDllLocation },
-  }
+  })
 else
-  lspconfig.bicep.setup {
+  vim.lsp.config('bicep', {
     on_init = on_init,
     on_attach = on_attach,
     capabilities = capabilities,
     cmd = { "dotnet", "C:/tools/bicep/Bicep.LangServer.dll" },
-  }
+  })
 end
 
 require("ionide").setup {
@@ -77,24 +73,24 @@ require("ionide").setup {
 
 if osName == "Linux" then
   local powershellEs = os.getenv "POWERSHELL_ES"
-  lspconfig.powershell_es.setup {
+  vim.lsp.config('powershell_es', {
     on_init = on_init,
     on_attach = on_attach,
     capabilities = capabilities,
     bundle_path = powershellEs,
-  }
+  })
 else
-  lspconfig.powershell_es.setup {
+  vim.lsp.config('powershell_es', {
     on_init = on_init,
     on_attach = on_attach,
     capabilities = capabilities,
     bundle_path = vim.fn.stdpath "data" .. "/mason/packages/powershell-editor-services",
-  }
+  })
 end
 
 if osName == "Linux" then
   local omnisharp = os.getenv "OMNISHARP_LOCATION"
-  lspconfig.omnisharp.setup {
+  vim.lsp.config('omnisharp', {
 
     cmd = { "dotnet", omnisharp },
     on_attach = on_attach,
@@ -110,9 +106,9 @@ if osName == "Linux" then
     handlers = {
       ["textDocument/definition"] = require("omnisharp_extended").handler,
     },
-  }
+  })
 else
-  lspconfig.omnisharp.setup {
+  vim.lsp.config('omnisharp', {
     cmd = { "dotnet", vim.fn.stdpath "data" .. "/mason/packages/omnisharp/libexec/OmniSharp.dll" },
     on_attach = on_attach,
     capabilities = capabilities,
@@ -127,15 +123,15 @@ else
     handlers = {
       ["textDocument/definition"] = require("omnisharp_extended").handler,
     },
-  }
+  })
 end
 
 if osName == "Linux" then
-  lspconfig.clangd.setup {
+  vim.lsp.config('clangd', {
     cmd = { "clangd" },
-  }
+  })
 else
-  lspconfig.clangd.setup {
+  vim.lsp.config('clangd', {
     cmd = { "clangd", "--query-driver=C:/ProgramData/chocolatey/lib/winlibs/tools/mingw64/bin/g++.exe" },
-  }
+  })
 end
