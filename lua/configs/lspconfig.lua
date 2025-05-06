@@ -3,7 +3,6 @@ local on_init = require("nvchad.configs.lspconfig").on_init
 local capabilities = require("nvchad.configs.lspconfig").capabilities
 local util = require "lspconfig/util"
 
-local lspconfig = require "lspconfig"
 local servers = {
   "yamlls",
   "lemminx",
@@ -61,6 +60,7 @@ else
     cmd = { "dotnet", "C:/tools/bicep/Bicep.LangServer.dll" },
   })
 end
+vim.lsp.enable('bicep')
 
 require("ionide").setup {
   on_init = on_init,
@@ -87,6 +87,7 @@ else
     bundle_path = vim.fn.stdpath "data" .. "/mason/packages/powershell-editor-services",
   })
 end
+vim.lsp.enable('powershell_es')
 
 if osName == "Linux" then
   local omnisharp = os.getenv "OMNISHARP_LOCATION"
@@ -125,6 +126,7 @@ else
     },
   })
 end
+vim.lsp.enable('omnisharp')
 
 if osName == "Linux" then
   vim.lsp.config('clangd', {
@@ -135,3 +137,4 @@ else
     cmd = { "clangd", "--query-driver=C:/ProgramData/chocolatey/lib/winlibs/tools/mingw64/bin/g++.exe" },
   })
 end
+vim.lsp.enable('clangd')
