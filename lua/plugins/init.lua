@@ -91,7 +91,7 @@ return {
   },
   {
     "mason-org/mason.nvim",
-    config = function()
+    opts = function()
       return require "configs.mason"
     end,
   },
