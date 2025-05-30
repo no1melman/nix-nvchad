@@ -17,6 +17,8 @@ local servers = {
   "nixd",
   "pyright",
   "zls",
+  "roslyn",
+  "rzls",
 }
 
 -- lsps with default config
@@ -89,44 +91,53 @@ else
 end
 vim.lsp.enable "powershell_es"
 
-if osName == "Linux" then
-  local omnisharp = os.getenv "OMNISHARP_LOCATION"
-  vim.lsp.config("omnisharp", {
-
-    cmd = { "dotnet", omnisharp },
-    on_attach = on_attach,
-    capabilities = capabilities,
-
-    enable_roslyn_analyzers = true,
-    enable_import_completion = true,
-    enable_package_restore = true,
-    enable_editorconfig_support = true,
-
-    analyze_open_documents_only = false,
-
-    handlers = {
-      ["textDocument/definition"] = require("omnisharp_extended").handler,
+vim.lsp.config("roslyn", {
+  handlers = require "rzls.roslyn_handlers",
+  settings = {
+    ["csharp|code_lens"] = {
+      dotnet_enable_references_code_lens = true,
     },
-  })
-else
-  vim.lsp.config("omnisharp", {
-    cmd = { "dotnet", vim.fn.stdpath "data" .. "/mason/packages/omnisharp/libexec/OmniSharp.dll" },
-    on_attach = on_attach,
-    capabilities = capabilities,
-
-    enable_roslyn_analyzers = true,
-    enable_import_completion = true,
-    enable_package_restore = true,
-    enable_editorconfig_support = true,
-
-    analyze_open_documents_only = false,
-
-    handlers = {
-      ["textDocument/definition"] = require("omnisharp_extended").handler,
-    },
-  })
-end
-vim.lsp.enable "omnisharp"
+  },
+})
+vim.lsp.enable "roslyn"
+-- if osName == "Linux" then
+--   local omnisharp = os.getenv "OMNISHARP_LOCATION"
+--   vim.lsp.config("omnisharp", {
+--
+--     cmd = { "dotnet", omnisharp },
+--     on_attach = on_attach,
+--     capabilities = capabilities,
+--
+--     enable_roslyn_analyzers = true,
+--     enable_import_completion = true,
+--     enable_package_restore = true,
+--     enable_editorconfig_support = true,
+--
+--     analyze_open_documents_only = false,
+--
+--     handlers = {
+--       ["textDocument/definition"] = require("omnisharp_extended").handler,
+--     },
+--   })
+-- else
+--   vim.lsp.config("omnisharp", {
+--     cmd = { "dotnet", vim.fn.stdpath "data" .. "/mason/packages/omnisharp/libexec/OmniSharp.dll" },
+--     on_attach = on_attach,
+--     capabilities = capabilities,
+--
+--     enable_roslyn_analyzers = true,
+--     enable_import_completion = true,
+--     enable_package_restore = true,
+--     enable_editorconfig_support = true,
+--
+--     analyze_open_documents_only = false,
+--
+--     handlers = {
+--       ["textDocument/definition"] = require("omnisharp_extended").handler,
+--     },
+--   })
+-- end
+-- vim.lsp.enable "omnisharp"
 
 if osName == "Linux" then
   vim.lsp.config("clangd", {

@@ -132,4 +132,22 @@ return {
   {
     "Hoffs/omnisharp-extended-lsp.nvim",
   },
+  {
+    "seblyng/roslyn.nvim",
+    ft = { "cs", "razor" },
+    dependencies = {
+      {
+        "tris203/rzls.nvim",
+        config = true,
+      },
+    },
+    init = function()
+      vim.filetype.add {
+        extension = {
+          razor = "razor",
+          cshtml = "cshtml",
+        },
+      }
+    end,
+  },
 }
