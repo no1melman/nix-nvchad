@@ -1,0 +1,32 @@
+return {
+  registries = {
+    "github:mason-org/mason-registry",
+    "github:Crashdummyy/mason-registry",
+  },
+  ensure_installed = {
+    "lua-language-server",
+    "html-lsp",
+    "stylua",
+    "yaml-language-server",
+    "lemminx",
+    "typescript-language-server",
+    "clangd",
+    "gopls",
+    "rust-analyzer",
+    "svelte-language-server",
+    "omnisharp",
+    "powershell-editor-services",
+    "css-lsp",
+    "terraform-ls",
+    "bicep-lsp",
+    "dockerfile-language-server",
+    -- formatters
+    "prettier",
+    "prettierd",
+    "clang-format",
+    "cmakelang",
+    "fantomas",
+    "yamlfmt",
+    "goimports",
+  },
+}
