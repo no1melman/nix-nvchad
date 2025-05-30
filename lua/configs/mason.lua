@@ -20,6 +20,8 @@ return {
     "terraform-ls",
     "bicep-lsp",
     "dockerfile-language-server",
+    "roslyn",
+    "rzls",
     -- formatters
     "prettier",
     "prettierd",
