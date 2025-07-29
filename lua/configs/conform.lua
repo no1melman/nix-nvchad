@@ -7,7 +7,7 @@ local options = {
     cpp = { "clang-format" },
     c = { "clang-format" },
     cmake = { "cmake_format" },
-    tf = { "terraform_fmt" },
+    terraform = { command = "terraform fmt", args = { "-write", "$FILENAME"} },
     -- Conform will run multiple formatters sequentially
     go = { "goimports", "gofmt" },
     -- Use a sub-list to run only the first available formatter
