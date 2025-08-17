@@ -18,6 +18,7 @@ local servers = {
   "pyright",
   "zls",
   "rzls",
+  "pylsp",
 }
 
 -- lsps with default config
