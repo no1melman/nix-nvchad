@@ -25,39 +25,42 @@ for _, lsp in ipairs(servers) do
   vim.lsp.config(lsp, {
     on_attach = on_attach,
     on_init = on_init,
-    capabilities = capabilities
+    capabilities = capabilities,
   })
   vim.lsp.enable(lsp)
 end
 
 vim.lsp.config("lua_ls", {
-  on_init = function (client)
+  on_init = function(client)
     if client.workspace_folders then
       local path = client.workspace_folders[1].name
-      if path ~= vim.fn.stdpath('config') and (vim.uv.fs_stat(path .. '/.luarc') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then
+      if
+        path ~= vim.fn.stdpath "config"
+        and (vim.uv.fs_stat(path .. "/.luarc") or vim.uv.fs_stat(path .. "/.luarc.jsonc"))
+      then
         return
       end
     end
 
-    client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+    client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
       runtime = {
-        version = 'LuaJIT',
+        version = "LuaJIT",
         path = {
-          'lua/?.lua',
-          'lua/?/init.lua'
-        }
+          "lua/?.lua",
+          "lua/?/init.lua",
+        },
       },
       workspace = {
         checkThirdParty = false,
         library = {
-          vim.env.VIMRUNTIME
-        }
-      }
+          vim.env.VIMRUNTIME,
+        },
+      },
     })
   end,
   settings = {
-    Lua = {}
-  }
+    Lua = {},
+  },
 })
 
 vim.lsp.config("gopls", {
@@ -125,37 +128,37 @@ else
 end
 vim.lsp.enable "powershell_es"
 
-if osName == "Linux" then
-  local roslynLs = os.getenv "ROSLYN_LSP"
-  vim.lsp.config("roslyn", {
-    on_init = on_init,
-    on_attach = on_attach,
-    capabilities = capabilities,
-    cmd = {
-      "dotnet",
-      roslynLs .. "/lib/roslyn-ls/Microsoft.CodeAnalysis.LanguageServer.dll",
-      "--logLevel=Information",
-      "--extensionLogDirectory=" .. vim.fs.dirname(vim.lsp.get_log_path()),
-      "--stdio",
-    },
-    handlers = require "rzls.roslyn_handlers",
-    settings = {
-      ["csharp|code_lens"] = {
-        dotnet_enable_references_code_lens = true,
-      },
-    },
-  })
-else
-  vim.lsp.config("roslyn", {
-    handlers = require "rzls.roslyn_handlers",
-    settings = {
-      ["csharp|code_lens"] = {
-        dotnet_enable_references_code_lens = true,
-      },
-    },
-  })
-end
-vim.lsp.enable "roslyn"
+-- if osName == "Linux" then
+--   local roslynLs = os.getenv "ROSLYN_LSP"
+--   vim.lsp.config("roslyn", {
+--     on_init = on_init,
+--     on_attach = on_attach,
+--     capabilities = capabilities,
+--     cmd = {
+--       "dotnet",
+--       roslynLs .. "/lib/roslyn-ls/Microsoft.CodeAnalysis.LanguageServer.dll",
+--       "--logLevel=Information",
+--       "--extensionLogDirectory=" .. vim.fs.dirname(vim.lsp.get_log_path()),
+--       "--stdio",
+--     },
+--     handlers = require "rzls.roslyn_handlers",
+--     settings = {
+--       ["csharp|code_lens"] = {
+--         dotnet_enable_references_code_lens = true,
+--       },
+--     },
+--   })
+-- else
+--   vim.lsp.config("roslyn", {
+--     handlers = require "rzls.roslyn_handlers",
+--     settings = {
+--       ["csharp|code_lens"] = {
+--         dotnet_enable_references_code_lens = true,
+--       },
+--     },
+--   })
+-- end
+-- vim.lsp.enable "roslyn"
 
 if osName == "Linux" then
   vim.lsp.config("clangd", {
