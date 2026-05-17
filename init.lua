@@ -36,7 +36,7 @@ vim.schedule(function()
   require "mappings"
 end)
 
-local osName = vim.loop.os_uname().sysname
+local osName = vim.uv.os_uname().sysname
 if osName == "Linux" then
   vim.g.clipboard = {
     name = "wl clipboard",

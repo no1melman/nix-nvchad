@@ -82,7 +82,7 @@ vim.lsp.config("gopls", {
   },
 })
 
-local osName = vim.loop.os_uname().sysname
+local osName = vim.uv.os_uname().sysname
 
 if osName == "Linux" then
   local bicepDllLocation = os.getenv "BICEP_DLL_LOCATION"

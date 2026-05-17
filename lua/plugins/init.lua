@@ -33,6 +33,7 @@ return {
         -- "ocaml",
         "sql",
         "nix",
+        "fsharp",
 
         "git_config",
         "git_rebase",
@@ -101,7 +102,6 @@ return {
     dependencies = {
       "neovim/nvim-lspconfig",
     },
-    event = "VeryLazy",
   },
   {
     "Hoffs/omnisharp-extended-lsp.nvim",
