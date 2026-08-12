@@ -1,6 +1,8 @@
-local on_attach = require("nvchad.configs.lspconfig").on_attach
-local on_init = require("nvchad.configs.lspconfig").on_init
-local capabilities = require("nvchad.configs.lspconfig").capabilities
+-- Required. This spec's `config` replaces NvChad's own, so nothing else calls defaults().
+-- It applies capabilities + on_init to every server via vim.lsp.config("*", ...), registers
+-- the LSP keymaps on LspAttach, loads the diagnostic/base46 config, and enables lua_ls.
+require("nvchad.configs.lspconfig").defaults()
+
 local util = require "lspconfig/util"
 
 local servers = {
@@ -17,19 +19,11 @@ local servers = {
   "nixd",
   "pyright",
   "zls",
-  "rzls",
   "pylsp",
 }
 
--- lsps with default config
-for _, lsp in ipairs(servers) do
-  vim.lsp.config(lsp, {
-    on_attach = on_attach,
-    on_init = on_init,
-    capabilities = capabilities,
-  })
-  vim.lsp.enable(lsp)
-end
+-- lsps with default config; capabilities/on_init/on_attach all come from defaults() above
+vim.lsp.enable(servers)
 
 vim.lsp.config("lua_ls", {
   on_init = function(client)
@@ -65,9 +59,6 @@ vim.lsp.config("lua_ls", {
 })
 
 vim.lsp.config("gopls", {
-  on_attach = on_attach,
-  on_init = on_init,
-  capabilities = capabilities,
   cmd = { "gopls" },
   filetypes = { "go", "gomod", "gowork", "gotmpl" },
   root_dir = util.root_pattern("go.work", "go.mod", ".git"),
@@ -87,43 +78,25 @@ local osName = vim.uv.os_uname().sysname
 if osName == "Linux" then
   local bicepDllLocation = os.getenv "BICEP_DLL_LOCATION"
   vim.lsp.config("bicep", {
-    on_init = on_init,
-    on_attach = on_attach,
-    capabilities = capabilities,
     cmd = { "dotnet", bicepDllLocation },
   })
 else
   vim.lsp.config("bicep", {
-    on_init = on_init,
-    on_attach = on_attach,
-    capabilities = capabilities,
     cmd = { "dotnet", "C:/tools/bicep/Bicep.LangServer.dll" },
   })
 end
 vim.lsp.enable "bicep"
 
-require("ionide").setup {
-  on_init = on_init,
-  on_attach = function(client, bufnr)
-    on_attach(client, bufnr)
-    vim.lsp.codelens.refresh()
-  end,
-  capabilities = capabilities,
-}
+-- F#/Ionide is configured in its own lazy spec (lua/plugins/init.lua) so that it
+-- honours `ft` and cannot take the rest of this file down if it fails to load.
 
 if osName == "Linux" then
   local powershellEs = os.getenv "POWERSHELL_ES"
   vim.lsp.config("powershell_es", {
-    on_init = on_init,
-    on_attach = on_attach,
-    capabilities = capabilities,
     bundle_path = powershellEs,
   })
 else
   vim.lsp.config("powershell_es", {
-    on_init = on_init,
-    on_attach = on_attach,
-    capabilities = capabilities,
     bundle_path = vim.fn.stdpath "data" .. "/mason/packages/powershell-editor-services",
   })
 end

@@ -91,17 +91,48 @@ return {
   },
   {
     "mason-org/mason.nvim",
-    config = function()
-      return require "configs.mason"
+    -- Must be an *extending* opts function. `config` returning a table performed no setup at
+    -- all, and a plain `opts` table is discarded because NvChad's own spec uses
+    -- `opts = function() return <its table> end`, which ignores what came before it.
+    opts = function(_, opts)
+      return vim.tbl_deep_extend("force", opts or {}, require "configs.mason")
     end,
   },
 
   {
     "ionide/Ionide-vim",
-    ft = "fsharp",
+    ft = { "fsharp", "fsharp_project" },
     dependencies = {
       "neovim/nvim-lspconfig",
     },
+    init = function()
+      -- Must be set before the plugin loads: `loadConfig` reads these to build the
+      -- server cmd, and `lsp_auto_setup = 0` stops Ionide enabling itself so the
+      -- `config` below owns the client.
+      vim.g["fsharp#lsp_auto_setup"] = 0
+      vim.g["fsharp#show_signature_on_cursor_move"] = 0
+      vim.g["fsharp#workspace_mode_peek_deep_level"] = 4
+    end,
+    config = function()
+      -- NOTE: no `capabilities`/`on_init` here. NvChad's `defaults()` already applies both
+      -- to every server via `vim.lsp.config("*", ...)`, and Ionide's own on_init runs
+      -- fsharp#initialize() plus the workspace/didChangeConfiguration push -- `vim.lsp.config`
+      -- merges plain functions with force semantics, so setting on_init here would replace
+      -- it outright and silently break project loading. Keymaps likewise come from NvChad's
+      -- global LspAttach autocmd, so on_attach only needs to restore the codelens refresh
+      -- that overriding Ionide's own on_attach costs us.
+      vim.lsp.config("ionide", {
+        on_attach = function(_, bufnr)
+          -- Setting on_attach here replaces Ionide's own, which is what would otherwise
+          -- turn codelens on -- so redo it. `enable` supersedes the deprecated
+          -- `codelens.refresh`, and nvim debounces re-requests on buffer change itself,
+          -- so this needs no accompanying autocmd.
+          vim.lsp.codelens.enable(true, { bufnr = bufnr })
+        end,
+      })
+
+      vim.lsp.enable "ionide"
+    end,
   },
   {
     "Hoffs/omnisharp-extended-lsp.nvim",

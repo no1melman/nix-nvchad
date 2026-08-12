@@ -15,13 +15,12 @@ vim.opt.shellxquote = ""
 
 vim.opt.scrolloff = 8
 
--- Ionide variables
-vim.g["fsharp#show_signature_on_cursor_move"] = 0
-vim.g["fsharp#lsp_auto_setup"] = 0
-vim.g["fsharp#workspace_mode_peek_deep_level"] = 4
+-- Ionide variables live in the plugin spec's `init` (lua/plugins/init.lua) so lazy.nvim
+-- guarantees they are set before the plugin loads.
 
+-- Mostly redundant now: nvim re-requests codelens on buffer change by itself.
 vim.api.nvim_create_user_command("FSharpRefreshCodeLens", function()
-  vim.lsp.codelens.refresh()
+  vim.lsp.codelens.enable(true, { bufnr = 0 })
   print "[FSAC] Refreshing CodeLens"
 end, {
   bang = true,
