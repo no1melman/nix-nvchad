@@ -1,6 +1,12 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
+    -- Runs before the plugin loads, which is the only window in which the shim can patch
+    -- `vim.treesitter.query.add_{predicate,directive}` ahead of nvim-treesitter registering
+    -- its own. See lua/configs/ts-compat.lua.
+    init = function()
+      require "configs.ts-compat"
+    end,
     opts = {
       ensure_installed = {
         "javascript",
