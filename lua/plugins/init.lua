@@ -19,6 +19,7 @@ return {
         "dockerfile",
         "terraform",
         "markdown",
+        "markdown_inline",
         "mermaid",
         "proto",
         "cmake",
@@ -103,6 +104,37 @@ return {
     opts = function(_, opts)
       return vim.tbl_deep_extend("force", opts or {}, require "configs.mason")
     end,
+  },
+
+  -- In-buffer rendering. Needs the markdown + markdown_inline parsers above.
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    ft = { "markdown" },
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+    opts = {},
+    keys = {
+      { "<leader>mr", "<cmd>RenderMarkdown toggle<CR>", ft = "markdown", desc = "Markdown toggle render" },
+    },
+  },
+  -- Live preview in the browser. Built with npm rather than `mkdp#util#install`, whose
+  -- prebuilt binary is dynamically linked and will not run on NixOS without nix-ld.
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreview", "MarkdownPreviewStop", "MarkdownPreviewToggle" },
+    ft = { "markdown" },
+    build = function(plugin)
+      if vim.fn.executable "npm" == 1 then
+        vim.fn.system { vim.fn.exepath "npm", "install", "--prefix", plugin.dir .. "/app" }
+      else
+        vim.fn["mkdp#util#install"]()
+      end
+    end,
+    init = function()
+      vim.g.mkdp_filetypes = { "markdown" }
+    end,
+    keys = {
+      { "<leader>mp", "<cmd>MarkdownPreviewToggle<CR>", ft = "markdown", desc = "Markdown toggle browser preview" },
+    },
   },
 
   {
