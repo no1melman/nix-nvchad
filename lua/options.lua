@@ -30,3 +30,6 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
   pattern = "*.bicep",
   command = "set filetype=bicep",
 })
+
+-- *.m is ambiguous (Objective-C / MATLAB / Mathematica); always treat it as Objective-C.
+vim.g.filetype_m = "objc"

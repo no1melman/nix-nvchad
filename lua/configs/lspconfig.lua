@@ -73,24 +73,29 @@ vim.lsp.config("gopls", {
   },
 })
 
-local osName = vim.uv.os_uname().sysname
+-- Linux and macOS both get their tools from nix (paths via env vars); Windows is hard-coded.
+local isWindows = vim.fn.has "win32" == 1
 
-if osName == "Linux" then
+if not isWindows then
   local bicepDllLocation = os.getenv "BICEP_DLL_LOCATION"
-  vim.lsp.config("bicep", {
-    cmd = { "dotnet", bicepDllLocation },
-  })
+  -- Not every machine's nix config provides bicep; without the dll the server can't start.
+  if bicepDllLocation then
+    vim.lsp.config("bicep", {
+      cmd = { "dotnet", bicepDllLocation },
+    })
+    vim.lsp.enable "bicep"
+  end
 else
   vim.lsp.config("bicep", {
     cmd = { "dotnet", "C:/tools/bicep/Bicep.LangServer.dll" },
   })
+  vim.lsp.enable "bicep"
 end
-vim.lsp.enable "bicep"
 
 -- F#/Ionide is configured in its own lazy spec (lua/plugins/init.lua) so that it
 -- honours `ft` and cannot take the rest of this file down if it fails to load.
 
-if osName == "Linux" then
+if not isWindows then
   local powershellEs = os.getenv "POWERSHELL_ES"
   vim.lsp.config("powershell_es", {
     bundle_path = powershellEs,
@@ -102,7 +107,7 @@ else
 end
 vim.lsp.enable "powershell_es"
 
--- if osName == "Linux" then
+-- if not isWindows then
 --   local roslynLs = os.getenv "ROSLYN_LSP"
 --   vim.lsp.config("roslyn", {
 --     on_init = on_init,
@@ -134,13 +139,19 @@ vim.lsp.enable "powershell_es"
 -- end
 -- vim.lsp.enable "roslyn"
 
-if osName == "Linux" then
-  vim.lsp.config("clangd", {
-    cmd = { "clangd" },
-  })
-else
+if isWindows then
   vim.lsp.config("clangd", {
     cmd = { "clangd", "--query-driver=C:/ProgramData/chocolatey/lib/winlibs/tools/mingw64/bin/g++.exe" },
   })
 end
+-- Elsewhere the default `clangd` from PATH is right: nix's on Linux, Xcode's (which knows
+-- the Apple SDKs and frameworks) on macOS.
 vim.lsp.enable "clangd"
+
+-- Swift. sourcekit-lsp also claims c/cpp/objc/objcpp by default; leave those to clangd so
+-- the two don't both attach. Xcode projects (no Package.swift) need a buildServer.json,
+-- e.g. from `xcode-build-server config -project X.xcodeproj -scheme X`.
+vim.lsp.config("sourcekit", {
+  filetypes = { "swift" },
+})
+vim.lsp.enable "sourcekit"

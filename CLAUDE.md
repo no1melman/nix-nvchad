@@ -9,7 +9,7 @@ Personal Neovim config: an NvChad v2.5 distro adapted for a Nix environment (als
 - `lua/options.lua` — vim opts (PowerShell as `:shell`), Ionide globals, `*.bicep` filetype autocmd.
 - `lua/mappings.lua` — `jj`→`<ESC>`, completion trigger, DAP keys, floating terminal.
 - `lua/plugins/init.lua` — plugin specs: treesitter list, conform, nvim-tree, lspconfig, DAP (+ go, ui), Mason, Ionide (F#), roslyn.nvim (C# + razor via rzls).
-- `lua/configs/lspconfig.lua` — LSP servers; OS-branched paths for `bicep`, `powershell_es`, `clangd`. Roslyn block currently commented out.
+- `lua/configs/lspconfig.lua` — LSP servers; Windows-vs-nix paths for `bicep`, `powershell_es`, `clangd`; `sourcekit` (Swift). Roslyn block currently commented out.
 - `lua/configs/mason.lua` — Mason registries (incl. Crashdummyy for roslyn/rzls) + ensure_installed.
 - `lua/configs/conform.lua` — formatters per filetype, format-on-save.
 - `lua/configs/ts-compat.lua` — treesitter predicate/directive shim for Neovim 0.12 (see Version constraints).
@@ -18,8 +18,13 @@ Personal Neovim config: an NvChad v2.5 distro adapted for a Nix environment (als
 ## Conventions
 
 - Uses NvChad v2.5 API (`vim.lsp.config` / `vim.lsp.enable`, not the old `lspconfig[server].setup`).
-- Cross-platform: gate behavior on `vim.loop.os_uname().sysname == "Linux"`; Windows paths hard-coded as the else branch.
-- Env vars used for tool paths on Linux: `BICEP_DLL_LOCATION`, `POWERSHELL_ES`, (formerly `ROSLYN_LSP`). Set these in the Nix shell/home-manager that wraps this config.
+- Cross-platform: Linux and macOS are both nix-managed, so tool paths come from env vars on
+  both; gate on `vim.fn.has "win32" == 1` with Windows paths hard-coded. Only gate on
+  `vim.uv.os_uname().sysname` for genuinely OS-specific things (e.g. the Wayland clipboard,
+  Linux only — macOS uses pbcopy natively).
+- Env-var-driven servers should skip `vim.lsp.enable` when the var is unset (not every
+  machine's nix config provides every tool).
+- Env vars used for tool paths on Linux and macOS: `BICEP_DLL_LOCATION`, `POWERSHELL_ES`, (formerly `ROSLYN_LSP`). Set these in the Nix shell/home-manager that wraps this config.
 - Formatter: stylua (`.stylua.toml` at root).
 
 ## Deployment

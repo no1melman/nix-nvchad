@@ -6,6 +6,10 @@ local options = {
     fsharp = { "fantomas" },
     cpp = { "clang-format" },
     c = { "clang-format" },
+    objc = { "clang-format" },
+    objcpp = { "clang-format" },
+    -- Apple's swift-format first, nicklockwood/SwiftFormat if that's all that's on PATH
+    swift = { "swift_format", "swiftformat", stop_after_first = true },
     cmake = { "cmake_format" },
     terraform = { command = "terraform fmt", args = { "-write", "$FILENAME"} },
     -- Conform will run multiple formatters sequentially

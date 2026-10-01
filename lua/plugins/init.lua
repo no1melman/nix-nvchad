@@ -31,6 +31,8 @@ return {
         "c_sharp",
         "cpp",
         "c",
+        "objc",
+        "swift",
         "go",
         "rust",
         "python",

@@ -57,6 +57,21 @@ function M.go()
 end
 return M
 LUA
+  cat >"$tmp/files/sample.swift" <<'SWIFT'
+struct Greeter {
+  let name: String
+  func greet() -> String { "hello \(name)" }
+}
+SWIFT
+  cat >"$tmp/files/sample.m" <<'OBJC'
+#import <Foundation/Foundation.h>
+@interface Greeter : NSObject
+- (NSString *)greet:(NSString *)name;
+@end
+@implementation Greeter
+- (NSString *)greet:(NSString *)name { return [@"hello " stringByAppendingString:name]; }
+@end
+OBJC
   files=("$tmp"/files/sample.*)
 fi
 
