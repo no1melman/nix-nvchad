@@ -97,8 +97,22 @@ end
 
 if not isWindows then
   local powershellEs = os.getenv "POWERSHELL_ES"
+  -- lspconfig's default cmd passes `-LogLevel Information`, which the nixpkgs
+  -- PSES (4.3.x) rejects; it only accepts Diagnostic/Verbose/Normal/Warning/Error.
+  local logDir = vim.fs.dirname(vim.lsp.log.get_filename())
   vim.lsp.config("powershell_es", {
     bundle_path = powershellEs,
+    cmd = {
+      "pwsh",
+      "-NoLogo",
+      "-NoProfile",
+      "-Command",
+      ("& '%s/PowerShellEditorServices/Start-EditorServices.ps1'"):format(powershellEs)
+        .. (" -LogPath '%s/powershell_es.log'"):format(logDir)
+        .. (" -SessionDetailsPath '%s/powershell_es.session.json'"):format(logDir)
+        .. " -FeatureFlags @() -AdditionalModules @() -HostName nvim -HostProfileId 0"
+        .. " -HostVersion 1.0.0 -Stdio -LogLevel Normal",
+    },
   })
 else
   vim.lsp.config("powershell_es", {
